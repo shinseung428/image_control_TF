@@ -12,7 +12,7 @@ This function uses gaussian kernel to blur images and adds additional noise to e
 
 ## Block Patch  
 This function randomly blocks patched region in the image.  
-The size of the patch can be changed.
+The size of the patch can be changed.  
 ![Alt text](images/blockpatch.jpg?raw=true "blockpatch")  
 
 ## Block Patch(Random Size)  
@@ -21,4 +21,4 @@ The size of the patch is random.
 
 ## Keep Patch  
 All pixels outside randomly chosen k x k patch are set to zero.  
-![Alt text](images/keep.jpg?raw=true "keeppatch")  
+![Alt text](images/keeppatch.jpg?raw=true "keeppatch")  
