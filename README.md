@@ -26,5 +26,5 @@ The size of the patch is random.
 ![Alt text](images/blockpatchrand.jpg?raw=true "blockpatchrand")  
 
 ## Keep Patch  
-All pixels outside randomly chosen k x k patch are set to zero.  
+All pixels outside randomly chosen p x p patch are set to zero.  
 ![Alt text](images/keeppatch.jpg?raw=true "keeppatch")  

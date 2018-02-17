@@ -8,14 +8,14 @@ import scipy.stats as st
 def block_pixels(input, p=0.5):
 	shape = input.get_shape().as_list()
 
-	#for single image
+	#for single image (h x w x c)
 	if len(shape) == 3:
 		prob = tf.random_uniform([shape[0], shape[1], 3], minval=0, maxval=1, dtype=tf.float32)
 		# prob = tf.tile(prob, [1, 1, 3])
 		prob = tf.to_int32(prob < p)
 		prob = tf.cast(prob, dtype=tf.float32)
 		res = tf.multiply(input, prob)
-	#for image batch
+	#for image batch (b x h x w x c)
 	else:
 		res = []
 		for idx in range(0, shape[0]):
@@ -47,14 +47,14 @@ def conv_noise(input, k_size=3, stddev=0.0):
 	convolve = lambda i, k: tf.nn.depthwise_conv2d(i, k, [1, 1, 1, 1], padding="SAME")
 
 	#apply gaussian kernel here
-	#for singe image
+	#for singe image  (h x w x c)
 	if len(shape) == 3:
 		gauss_kernel = gauss_kernel(kernlen=k_size, channels=3)
 
 		input = input[tf.newaxis,...]
 		res = convolve(input, gauss_kernel)
 		res = tf.squeeze(input, axis=0)
-	#for image batch
+	#for image batch (b x h x w x c)
 	else:
 		gauss_kernel = gauss_kernel(kernlen=k_size, channels=3)
 		res = convolve(input, gauss_kernel)
@@ -68,7 +68,7 @@ def conv_noise(input, k_size=3, stddev=0.0):
 def block_patch(input, patch_size=32):
 	shape = input.get_shape().as_list()
 
-	#for single image
+	#for single image (h x w x c)
 	if len(shape) == 3:
 		patch = tf.zeros([patch_size, patch_size, shape[-1]], dtype=tf.float32)
 
@@ -81,7 +81,7 @@ def block_patch(input, patch_size=32):
 		padded = tf.pad(patch, padding, "CONSTANT", constant_values=1)
 
 		res = tf.multiply(input, padded)
-	#for image batch
+	#for image batch (b x h x w x c)
 	else:
 		patch = tf.zeros([patch_size, patch_size, shape[-1]], dtype=tf.float32)
 	 
@@ -103,7 +103,7 @@ def block_patch(input, patch_size=32):
 #A randomly chosen patch is set to zero(patch size is random here)
 def block_patch_rand_size(input, margin=0, minval=15, maxval=25):
 	shape = input.get_shape().as_list()
-	#for single image
+	#for single image (h x w x c)
 	if len(shape) == 3:
 		#create patch in random size
 		pad_size = tf.random_uniform([2], minval=minval, maxval=maxval, dtype=tf.int32)
@@ -119,7 +119,7 @@ def block_patch_rand_size(input, margin=0, minval=15, maxval=25):
 		padded = tf.pad(patch, padding, "CONSTANT", constant_values=1)
 
 		res = tf.multiply(input, padded)
-	#for image batch
+	#for image batch (b x h x w x c)
 	else:
 		res = []
 		for idx in range(0, shape[0]):
@@ -147,7 +147,7 @@ def keep_patch(input, patch_size=32):
 	shape = input.get_shape().as_list()
 	#for singe image
 	if len(shape) == 3:
-		#generate a patch
+		#generate a patch (h x w x c)
 		patch = tf.ones([patch_size, patch_size, shape[-1]], dtype=tf.float32)
 	 	
 		rand_num = tf.random_uniform([2], minval=0, maxval=shape[0]-patch_size, dtype=tf.int32)
@@ -159,7 +159,7 @@ def keep_patch(input, patch_size=32):
 		padded = tf.pad(patch, padding, "CONSTANT", constant_values=0)
 		res = tf.multiply(input, padded)
 
-	#for image batch
+	#for image batch (b x h x w x c)
 	else:
 		#generate a patch
 		patch = tf.ones([patch_size, patch_size, shape[-1]], dtype=tf.float32)
